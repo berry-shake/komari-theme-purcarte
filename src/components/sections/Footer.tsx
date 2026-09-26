@@ -35,7 +35,7 @@ const Footer = forwardRef<
         <p className="flex justify-center text-sm text-secondary-foreground theme-text-shadow whitespace-pre">
           {t("footer.poweredBy")}{" "}
           <a
-            href="https://github.com/komari-monitor/komari"
+            href="https://github.com/berry-shake/komari"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 hover:text-blue-600 transition-colors">
@@ -44,7 +44,7 @@ const Footer = forwardRef<
           {" | "}
           {t("footer.themeBy")}{" "}
           <a
-            href="https://github.com/Montia37/komari-theme-purcarte"
+            href="https://github.com/berry-shake/komari-theme-purcarte"
             target="_blank"
             rel="noopener noreferrer"
             className="text-blue-500 hover:text-blue-600 transition-colors">
