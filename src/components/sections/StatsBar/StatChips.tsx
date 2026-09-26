@@ -10,6 +10,9 @@ export const StatChip = memo(
     isInHeader,
     isMobile,
     textLeft,
+    onClick,
+    expanded,
+    title,
   }: {
     label: string;
     lines: string[];
@@ -17,12 +20,21 @@ export const StatChip = memo(
     isInHeader?: boolean;
     isMobile: boolean;
     textLeft?: boolean;
+    onClick?: () => void;
+    expanded?: boolean;
+    title?: string;
   }) => {
+    const Wrapper = onClick ? "button" : "div";
     if (isMobile || isInHeader) {
       return (
-        <div
+        <Wrapper
+          title={title}
+          onClick={onClick}
+          aria-expanded={expanded}
+          type={onClick ? "button" : undefined}
           className={cn(
             "flex shrink-0 bg-transition px-1.5 py-0.5 text-center items-center",
+            onClick && "cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-ring",
             isLabelVertical ? "" : "flex-col"
           )}>
           <div
@@ -43,21 +55,21 @@ export const StatChip = memo(
               <div key={index}>{line}</div>
             ))}
           </div>
-        </div>
+        </Wrapper>
       );
     }
 
     return (
-      <div className="w-full py-1">
+      <Wrapper title={title} onClick={onClick} aria-expanded={expanded} type={onClick ? "button" : undefined} className={cn("w-full py-1", onClick && "cursor-pointer rounded focus-visible:outline-2 focus-visible:outline-ring")}>
         <div className="flex flex-col gap-2 items-center">
-          <label>{label}</label>
+          <span>{label}</span>
           <div className={`font-medium -mt-2 ${textLeft ? "text-left" : ""}`}>
             {lines.map((line, index) => (
               <div key={index}>{line}</div>
             ))}
           </div>
         </div>
-      </div>
+      </Wrapper>
     );
   }
 );

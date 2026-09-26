@@ -1,3 +1,4 @@
+import NodeRemainingValue from "./NodeRemainingValue";
 import { cn, formatBytes, formatTrafficLimit, formatUptime } from "@/utils";
 import type { NodeData } from "@/types/node";
 import { Link } from "react-router-dom";
@@ -129,7 +130,10 @@ const NodeTableRow = ({
               className="hover:underline hover:text-(--accent-11)">
               <div className="text-base font-bold">{node.name}</div>
             </Link>
-            <Tag className="text-xs" tags={tagList} />
+            <div className="flex items-start gap-2">
+              <Tag className="min-w-0 flex-1 w-auto text-xs" tags={tagList} />
+              <NodeRemainingValue node={node} />
+            </div>
             <div className="flex text-xs">
               <span>
                 {isOnline && stats

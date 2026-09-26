@@ -19,6 +19,7 @@ export interface ThemeContextType {
     currentTime: boolean;
     currentOnline: boolean;
     regionOverview: boolean;
+    remainingValue: boolean;
     trafficOverview: boolean;
     networkSpeed: boolean;
   };
@@ -39,6 +40,7 @@ export const ThemeContext = createContext<ThemeContextType>({
     currentTime: true,
     currentOnline: true,
     regionOverview: true,
+    remainingValue: true,
     trafficOverview: true,
     networkSpeed: true,
   },
@@ -162,17 +164,21 @@ export const useThemeManager = () => {
     }
   }, [isMobile, selectMobileDefaultView, selectedDefaultView, setViewMode]);
 
-  const [statusCardsVisibility, setStatusCardsVisibility] = useStoredState(
-    "statusCardsVisibility",
-    (() => {
-      const visibility: { [key: string]: boolean } = {};
+  const defaultVisibility = (() => {
+      const visibility: { [key: string]: boolean } = {
+        currentTime: true, currentOnline: true, regionOverview: true, remainingValue: true, trafficOverview: true, networkSpeed: true,
+      };
       defaultstatusCardsVisibility.split(",").forEach((item) => {
         const [key, value] = item.split(":");
         visibility[key] = value === "true";
       });
       return visibility as ThemeContextType["statusCardsVisibility"];
-    })()
+    })();
+  const [storedVisibility, setStatusCardsVisibility] = useStoredState<Partial<ThemeContextType["statusCardsVisibility"]>>(
+    "statusCardsVisibility", defaultVisibility
   );
+  // Older saved preferences do not yet contain the remaining-value switch.
+  const statusCardsVisibility = { ...defaultVisibility, ...storedVisibility };
 
   const handleSetStatusCardsVisibility = (
     newVisibility: Partial<ThemeContextType["statusCardsVisibility"]>

@@ -1,3 +1,4 @@
+import NodeRemainingValue from "./NodeRemainingValue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { formatBytes, formatUptime, getOSImage } from "@/utils";
 import type { NodeData } from "@/types/node";
@@ -80,8 +81,9 @@ export const NodeCompact = ({ node, onShowDetails }: NodeCompactProps) => {
         </button>
       </CardHeader>
       <CardContent className="flex-grow space-y-1 text-xs flex-shrink-0">
-        <div className="flex flex-wrap gap-1">
-          <Tag tags={tagList} />
+        <div className="flex items-start gap-2">
+          <Tag className="min-w-0 flex-1 w-auto" tags={tagList} />
+          <NodeRemainingValue node={node} />
         </div>
         <div className="border-t border-(--accent-4)/50 my-1"></div>
         <div className="flex items-center justify-between">

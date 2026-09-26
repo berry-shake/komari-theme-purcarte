@@ -2,11 +2,13 @@ export type DisplayOptions = {
   currentTime: boolean;
   currentOnline: boolean;
   regionOverview: boolean;
+  remainingValue: boolean;
   trafficOverview: boolean;
   networkSpeed: boolean;
 };
 
 export type StatsSnapshot = {
+  remainingValue: { total: number; included: number; excluded: number };
   onlineCount: number;
   totalCount: number;
   uniqueRegions: number;
@@ -28,6 +30,8 @@ export interface StatsBarProps {
   setDisplayOptions: (options: Partial<DisplayOptions>) => void;
   stats: StatsSnapshot;
   loading: boolean;
+  onRegionClick?: () => void;
+  isWorldMapOpen?: boolean;
   enableGroupedBar?: boolean;
   groups?: string[];
   selectedGroup?: string;

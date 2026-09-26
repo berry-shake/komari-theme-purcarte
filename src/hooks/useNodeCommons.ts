@@ -1,7 +1,9 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { normalizeRegion, summarizeRegions } from "@/utils/regions";
 import { formatPrice } from "@/utils";
 import type { NodeData } from "@/types/node";
 import type { RpcNodeStatus } from "@/types/rpc";
+import { useRemainingValues } from "@/contexts/RemainingValueContext";
 import { useNodeData } from "@/contexts/NodeDataContext";
 import { useLiveData } from "@/contexts/LiveDataContext";
 import type { NodeDataContextType } from "@/contexts/NodeDataContext";
@@ -19,11 +21,13 @@ export const useNodeListCommons = (searchTerm: string) => {
   } = useNodeData() as NodeDataContextType;
   const { liveData } = useLiveData() as LiveDataContextType;
   const { t } = useLocale();
-  const { isOfflineNodesBehind, defaultSelectedGroup } = useAppConfig();
+  const { isOfflineNodesBehind, defaultSelectedGroup, enableWorldMap } = useAppConfig();
   const [selectedGroup, setSelectedGroup] = useState(
     defaultSelectedGroup || t("group.all")
   );
   const [sortKey, setSortKey] = useState<SortKey>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  useEffect(() => setSelectedRegion(null), [selectedGroup, searchTerm, enableWorldMap]);
   const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
   const handleSort = (key: SortKey) => {
@@ -51,7 +55,7 @@ export const useNodeListCommons = (searchTerm: string) => {
     [getGroups, t]
   );
 
-  const filteredNodes = useMemo(() => {
+  const scopedNodes = useMemo(() => {
     let nodes = combinedNodes
       .filter(
         (node: NodeData & { stats?: any }) =>
@@ -105,11 +109,18 @@ export const useNodeListCommons = (searchTerm: string) => {
     isOfflineNodesBehind,
   ]);
 
+  const filteredNodes = useMemo(() => selectedRegion && enableWorldMap
+    ? scopedNodes.filter(node => normalizeRegion(node.region || "") === selectedRegion)
+    : scopedNodes, [scopedNodes, selectedRegion, enableWorldMap]);
+
+  const { values } = useRemainingValues();
   const stats = useMemo(() => {
+    const amounts = filteredNodes.map(node => values.get(node.uuid)?.cny).filter((value): value is number => value != null);
     return {
+      remainingValue: { total: amounts.reduce((sum, value) => sum + value, 0), included: amounts.length, excluded: filteredNodes.length - amounts.length },
       onlineCount: filteredNodes.filter((n) => n.stats?.online).length,
       totalCount: filteredNodes.length,
-      uniqueRegions: new Set(filteredNodes.map((n) => n.region)).size,
+      uniqueRegions: summarizeRegions(filteredNodes).length,
       totalTrafficUp: filteredNodes.reduce(
         (acc, node) => acc + (node.stats?.net_total_up || 0),
         0
@@ -127,12 +138,15 @@ export const useNodeListCommons = (searchTerm: string) => {
         0
       ),
     };
-  }, [filteredNodes]);
+  }, [filteredNodes, values]);
 
   return {
     loading,
     groups,
     filteredNodes,
+    scopedNodes,
+    selectedRegion,
+    setSelectedRegion,
     stats,
     selectedGroup,
     setSelectedGroup,

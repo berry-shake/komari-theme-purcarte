@@ -29,6 +29,8 @@ export interface ConfigOptions {
   isShowStatsInHeader: boolean; // 是否在标题栏中显示统计信息
   mergeGroupsWithStats: boolean; // 是否在统计栏中合并分组
   enableStatsBar: boolean; // 是否启用统计栏
+  enableWorldMap: boolean; // 点亮全球（纯主题）
+  enableRemainingValue: boolean; // 剩余价值估算（浏览器汇率缓存）
   enableSortControl: boolean; // 是否启用排序控制
   isOfflineNodesBehind: boolean; // 是否启用离线节点置后显示
   enableGroupedBar: boolean; // 是否启用分组栏
@@ -67,7 +69,7 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   selectedDefaultView: "grid",
   selectedDefaultAppearance: "system",
   statusCardsVisibility:
-    "currentTime:true,currentOnline:true,regionOverview:true,trafficOverview:true,networkSpeed:true",
+    "currentTime:true,currentOnline:true,regionOverview:true,trafficOverview:true,networkSpeed:true,remainingValue:true",
   selectedHeaderStyle: "fixed",
   enableLogo: false,
   logoUrl: "/assets/logo.png",
@@ -80,6 +82,8 @@ export const DEFAULT_CONFIG: ConfigOptions = {
   isShowStatsInHeader: false,
   mergeGroupsWithStats: false,
   enableStatsBar: true,
+  enableWorldMap: true,
+  enableRemainingValue: true,
   enableSortControl: false,
   isOfflineNodesBehind: false,
   enableGroupedBar: true,

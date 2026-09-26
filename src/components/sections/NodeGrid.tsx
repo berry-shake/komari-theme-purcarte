@@ -1,3 +1,4 @@
+import NodeRemainingValue from "./NodeRemainingValue";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   formatBytes,
@@ -98,8 +99,9 @@ export const NodeGrid = ({
         </button>
       </CardHeader>
       <CardContent className="flex-grow space-y-3 text-sm text-nowrap">
-        <div className="flex flex-wrap gap-1 mb-2">
-          <Tag tags={tagList} />
+        <div className="flex items-start gap-2 mb-2">
+          <Tag className="min-w-0 flex-1 w-auto" tags={tagList} />
+          <NodeRemainingValue node={node} />
         </div>
         <div className="border-t border-(--accent-4)/50 my-2"></div>
         {isShowHWBarInCard && (

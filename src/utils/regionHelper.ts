@@ -5,8 +5,13 @@ export const emojiToRegionMap: Record<
 > = {
   "🇭🇰": {
     en: "Hong Kong",
-    zh: "香港",
-    aliases: ["hk", "hongkong", "hong kong", "香港", "HK"],
+    zh: "中国香港",
+    aliases: ["hk", "hongkong", "hong kong", "中国香港", "香港", "HK"],
+  },
+  "🇲🇴": {
+    en: "Macao",
+    zh: "中国澳门",
+    aliases: ["mo", "macao", "macau", "中国澳门", "澳门", "澳門", "MO"],
   },
   "🇨🇳": {
     en: "China",
@@ -44,8 +49,8 @@ export const emojiToRegionMap: Record<
   },
   "🇹🇼": {
     en: "Taiwan",
-    zh: "台湾",
-    aliases: ["tw", "taiwan", "台湾", "台灣", "TW"],
+    zh: "中国台湾",
+    aliases: ["tw", "taiwan", "中国台湾", "台湾", "台灣", "TW"],
   },
   "🇬🇧": {
     en: "United Kingdom",

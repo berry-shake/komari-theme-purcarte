@@ -147,8 +147,26 @@
                 "key": "statusCardsVisibility",
                 "name": "状态卡片显示控制",
                 "type": "string",
-                "default": "currentTime:true,currentOnline:true,regionOverview:true,trafficOverview:true,networkSpeed:true",
-                "help": "控制状态卡片的显示与隐藏，格式为 卡片名称:显示状态（true/false），多个卡片使用逗号分隔，支持的卡片名称包括 currentTime（当前时间）, currentOnline（当前在线）, regionOverview（点亮地区）, trafficOverview（流量概览）, networkSpeed（网络速率）"
+                "default": "currentTime:true,currentOnline:true,regionOverview:true,trafficOverview:true,networkSpeed:true,remainingValue:true",
+                "help": "控制状态卡片的显示与隐藏，格式为 卡片名称:显示状态（true/false），多个卡片使用逗号分隔，支持的卡片名称包括 currentTime（当前时间）, currentOnline（当前在线）, regionOverview（点亮地区）, remainingValue（剩余价值）, trafficOverview（流量概览）, networkSpeed（网络速率）"
+            },
+            {
+                "name": "地图与剩余价值",
+                "type": "title"
+            },
+            {
+                "key": "enableWorldMap",
+                "name": "启用点亮全球",
+                "type": "switch",
+                "default": true,
+                "help": "通过状态栏的“点亮地区”展开地图，需开启统计栏及该状态项。地图跟随分组与搜索结果，点击地区可筛选节点，无需外部地图服务。"
+            },
+            {
+                "key": "enableRemainingValue",
+                "name": "启用剩余价值估算",
+                "type": "switch",
+                "default": true,
+                "help": "在服务器卡片显示人民币剩余价值，状态栏显示合计，可在“状态显示设置”中独立隐藏合计。按账单周期与剩余时长估算；免费汇率由浏览器获取并缓存 24 小时。"
             },
             {
                 "name": "标题栏设置",

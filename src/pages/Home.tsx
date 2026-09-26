@@ -18,11 +18,18 @@ import {
 import { useIsMobile } from "@/hooks/useMobile";
 import { useLocale } from "@/config/hooks";
 import { cn } from "@/utils";
+import PortfolioOverview from "@/components/sections/PortfolioOverview";
 
 interface HomePageProps {
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   filteredNodes: (NodeData & { stats?: any })[];
+  scopedNodes: (NodeData & { stats?: any })[];
+  selectedRegion: string | null;
+  setSelectedRegion: (code: string | null) => void;
+  mapOpen: boolean;
+  setMapOpen: (open: boolean) => void;
+  onRegionClick: () => void;
   selectedGroup: string;
   setSelectedGroup: (group: string) => void;
   stats: any;
@@ -34,6 +41,12 @@ const HomePage: React.FC<HomePageProps> = ({
   searchTerm,
   setSearchTerm,
   filteredNodes,
+  scopedNodes,
+  selectedRegion,
+  setSelectedRegion,
+  mapOpen,
+  setMapOpen,
+  onRegionClick,
   selectedGroup,
   setSelectedGroup,
   stats,
@@ -51,6 +64,7 @@ const HomePage: React.FC<HomePageProps> = ({
     selectTrafficProgressStyle,
     isShowStatsInHeader,
     mergeGroupsWithStats,
+    enableWorldMap,
   } = useAppConfig();
   const { t } = useLocale();
 
@@ -102,6 +116,8 @@ const HomePage: React.FC<HomePageProps> = ({
           selectedGroup={selectedGroup}
           onSelectGroup={setSelectedGroup}
           onSort={handleSort}
+          onRegionClick={enableWorldMap ? onRegionClick : undefined}
+          isWorldMapOpen={mapOpen}
         />
       )}
 
@@ -119,6 +135,12 @@ const HomePage: React.FC<HomePageProps> = ({
           ))}
         </div>
       )}
+
+      {enableWorldMap && <PortfolioOverview
+        scopedNodes={scopedNodes}
+        mapOpen={mapOpen} setMapOpen={setMapOpen}
+        selectedRegion={selectedRegion} setSelectedRegion={setSelectedRegion}
+      />}
 
       <div className={cn("space-y-4", viewMode === "table" && "-mx-2 -mb-2")}>
         {filteredNodes.length > 0 ? (

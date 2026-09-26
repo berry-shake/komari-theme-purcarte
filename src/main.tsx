@@ -16,6 +16,7 @@ import { DynamicContent } from "@/components/DynamicContent";
 import { useThemeManager, useTheme } from "@/hooks/useTheme";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import { NodeDataProvider } from "@/contexts/NodeDataContext";
+import { RemainingValueProvider } from "@/contexts/RemainingValueContext";
 import { LiveDataProvider } from "@/contexts/LiveDataContext";
 import Footer from "@/components/sections/Footer";
 import Loading from "./components/loading";
@@ -56,14 +57,19 @@ const AppRoutes = ({
     loading,
     groups,
     filteredNodes,
+    scopedNodes,
+    selectedRegion,
+    setSelectedRegion,
     stats,
     selectedGroup,
     setSelectedGroup,
     handleSort,
   } = useNodeListCommons(searchTerm);
   const { statusCardsVisibility, setStatusCardsVisibility } = useTheme();
-  const { enableGroupedBar, selectedHeaderStyle, selectedFooterStyle } =
+  const { enableGroupedBar, selectedHeaderStyle, selectedFooterStyle, enableWorldMap } =
     useAppConfig();
+  const [mapOpen, setMapOpen] = useState(false);
+  const toggleWorldMap = () => setMapOpen(open => !open);
 
   const statsBarProps: StatsBarProps = {
     displayOptions: statusCardsVisibility,
@@ -75,6 +81,8 @@ const AppRoutes = ({
     selectedGroup,
     onSelectGroup: setSelectedGroup,
     onSort: handleSort,
+    onRegionClick: enableWorldMap && location.pathname === "/" ? toggleWorldMap : undefined,
+    isWorldMapOpen: mapOpen,
   };
 
   const homeViewportRef = useRef<HTMLDivElement | null>(null);
@@ -124,7 +132,7 @@ const AppRoutes = ({
                 <ScrollArea
                   className="h-full"
                   viewportRef={homeViewportRef}
-                  viewportProps={{ onScroll: handleHomeScroll }}>
+                  viewportProps={{ onScroll: handleHomeScroll, style: { overflowAnchor: "none" } }}>
                   <div className="flex flex-col min-h-screen">
                     <main
                       className="w-(--main-width) max-w-screen-2xl mx-auto h-full flex-grow"
@@ -142,6 +150,12 @@ const AppRoutes = ({
                         searchTerm={searchTerm}
                         setSearchTerm={setSearchTerm}
                         filteredNodes={filteredNodes}
+                        scopedNodes={scopedNodes}
+                        selectedRegion={selectedRegion}
+                        setSelectedRegion={setSelectedRegion}
+                        mapOpen={mapOpen}
+                        setMapOpen={setMapOpen}
+                        onRegionClick={toggleWorldMap}
                         selectedGroup={selectedGroup}
                         setSelectedGroup={setSelectedGroup}
                         stats={stats}
@@ -329,7 +343,9 @@ const AppProviders = ({
   }
   return (
     <NodeDataProvider>
-      <LiveDataProvider>{children}</LiveDataProvider>
+      <RemainingValueProvider>
+        <LiveDataProvider>{children}</LiveDataProvider>
+      </RemainingValueProvider>
     </NodeDataProvider>
   );
 };

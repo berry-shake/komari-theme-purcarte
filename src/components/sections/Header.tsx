@@ -32,6 +32,7 @@ import type { StatsBarProps } from "../sections/StatsBar";
 import EditButton from "../settings/EditButton";
 import { Card } from "../ui/card";
 import { cn } from "@/utils";
+import RemainingValueCalculator from "./RemainingValueCalculator";
 
 interface HeaderProps extends Partial<StatsBarProps> {
   isPrivate?: boolean;
@@ -339,6 +340,7 @@ export const Header = forwardRef<HTMLElement, HeaderProps>((props, ref) => {
             )}
 
           <div className="flex items-center space-x-2">
+            <RemainingValueCalculator />
             {isMobile ? (
               <>
                 {!isInstancePage && (

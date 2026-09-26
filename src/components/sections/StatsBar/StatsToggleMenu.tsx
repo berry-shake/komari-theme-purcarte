@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Settings2 } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import type { DisplayOptions, StatsBarProps } from "./types";
-import { useLocale } from "@/config/hooks";
+import { useAppConfig, useLocale } from "@/config/hooks";
 
 export const StatsToggleMenu = memo(
   ({
@@ -19,10 +19,12 @@ export const StatsToggleMenu = memo(
     setDisplayOptions,
   }: Pick<StatsBarProps, "displayOptions" | "setDisplayOptions">) => {
     const { t } = useLocale();
+    const { enableRemainingValue } = useAppConfig();
     return (
       <DropdownMenu modal={false}>
         <DropdownMenuTrigger asChild>
           <Button
+            aria-label={t("statsBar.displayOptionsTitle")}
             variant="ghost"
             size="icon"
             className="h-6 w-6 shrink-0 rounded-full cursor-pointer">
@@ -34,7 +36,7 @@ export const StatsToggleMenu = memo(
             {t("statsBar.displayOptionsTitle")}
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
-          {(Object.keys(displayOptions) as Array<keyof DisplayOptions>).map(
+          {(Object.keys(displayOptions) as Array<keyof DisplayOptions>).filter(key => key !== "remainingValue" || enableRemainingValue).sort((a, b) => Number(a === "remainingValue") - Number(b === "remainingValue")).map(
             (key) => (
               <DropdownMenuItem
                 key={key}
@@ -45,12 +47,14 @@ export const StatsToggleMenu = memo(
                       currentTime: t("statsBar.currentTime"),
                       currentOnline: t("statsBar.currentOnline"),
                       regionOverview: t("statsBar.region"),
+                      remainingValue: t("statsBar.remainingValue"),
                       trafficOverview: t("statsBar.traffic"),
                       networkSpeed: t("statsBar.networkSpeed"),
                     }[key]
                   }
                 </span>
                 <Switch
+                  aria-label={key === "remainingValue" ? t("statsBar.remainingValue") : undefined}
                   checked={displayOptions[key]}
                   onCheckedChange={(checked) =>
                     setDisplayOptions({ [key]: checked })

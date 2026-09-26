@@ -8,6 +8,7 @@ import { SortToggleMenu } from "./SortToggleMenu";
 import { StatsToggleMenu } from "./StatsToggleMenu";
 import { useLocale } from "@/config/hooks";
 import type { StatsBarProps, SortKey } from "./types";
+import { formatCny } from "@/utils/valuation";
 import { Card } from "@/components/ui/card";
 export type { StatsBarProps };
 
@@ -17,6 +18,9 @@ interface StatEntry {
   lines: string[];
   isLabelVertical?: boolean;
   textLeft?: boolean;
+  onClick?: () => void;
+  expanded?: boolean;
+  title?: string;
 }
 
 export const StatsBar = (props: StatsBarProps) => {
@@ -25,6 +29,8 @@ export const StatsBar = (props: StatsBarProps) => {
     setDisplayOptions,
     stats,
     loading,
+    onRegionClick,
+    isWorldMapOpen,
     groups,
     selectedGroup,
     onSelectGroup,
@@ -63,6 +69,7 @@ export const StatsBar = (props: StatsBarProps) => {
 
   const {
     isShowStatsInHeader,
+    enableRemainingValue,
     mergeGroupsWithStats,
     enableGroupedBar,
     enableSortControl,
@@ -90,6 +97,8 @@ export const StatsBar = (props: StatsBarProps) => {
         key: "regionOverview",
         label: getLabel(t("statsBar.region"), t("statsBar.region")),
         lines: [loading ? "..." : String(stats.uniqueRegions)],
+        onClick: onRegionClick,
+        expanded: onRegionClick ? isWorldMapOpen : undefined,
       });
     }
     if (displayOptions.trafficOverview) {
@@ -129,10 +138,19 @@ export const StatsBar = (props: StatsBarProps) => {
         textLeft: true,
       });
     }
+    if (displayOptions.remainingValue && enableRemainingValue && (loading || stats.remainingValue.total >= 0.005)) {
+      const { total, included, excluded } = stats.remainingValue;
+      entries.push({
+        key: "remainingValue",
+        label: t("statsBar.remainingValue"),
+        lines: [loading ? "..." : formatCny(total)],
+        title: `${t("portfolio.selectedNodes", { count: stats.totalCount })} · ${t("portfolio.valueCount", { included, excluded })}`,
+      });
+    }
     return entries;
-  }, [displayOptions, loading, stats, isMobile, isShowStatsInHeader, t]);
+  }, [displayOptions, loading, stats, isMobile, isShowStatsInHeader, t, onRegionClick, isWorldMapOpen, enableRemainingValue]);
 
-  const hasVisibleStats = Object.values(displayOptions).some(Boolean);
+  const hasVisibleStats = displayOptions.currentTime || resolvedStats.length > 0;
 
   if (isShowStatsInHeader && !isMobile) {
     return (
